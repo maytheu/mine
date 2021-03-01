@@ -7,7 +7,6 @@ require("dotenv").config();
 const app = express();
 
 require("./models/mainSchema.js");
-require("./models/resumeSchema.js");
 require("./models/userSchema.js");
 
 
