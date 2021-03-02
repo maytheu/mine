@@ -1,62 +1,83 @@
-import React, { Component } from 'react';
-import ReactGA from 'react-ga';
-import $ from 'jquery';
-import './App.css';
-import Header from './Components/Header';
-import Footer from './Components/Footer';
-import About from './Components/About';
-import Resume from './Components/Resume';
-import Contact from './Components/Contact';
-import Portfolio from './Components/Portfolio';
+import React, { Component } from "react";
+import ReactGA from "react-ga";
+import $ from "jquery";
+import axios from "axios";
+
+import "./App.css";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import About from "./Components/About";
+import Resume from "./Components/Resume";
+import Contact from "./Components/Contact";
+import Portfolio from "./Components/Portfolio";
 
 class App extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      foo: 'bar',
-      resumeData: {}
+      foo: "bar",
+      resumeData: {},
+      default: {},
     };
 
-    ReactGA.initialize('UA-110570651-1');
+    ReactGA.initialize("UA-110570651-1");
     ReactGA.pageview(window.location.pathname);
-
   }
 
-  getResumeData(){
-    $.ajax({
-      url:'./resumeData.json',
-      dataType:'json',
-      cache: false,
-      success: function(data){
-        this.setState({resumeData: data});
-      }.bind(this),
-      error: function(xhr, status, err){
-        console.log(err);
-        alert(err);
+  getResumeData() {
+    axios({
+      method: "GET",
+      url: "http://localhost:3001/api/about",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      if (res.data.success) {
+        this.setState({ resumeData: res.data.address });
+      } else {
+        alert("Can't get user details");
       }
     });
   }
 
-  componentDidMount(){
-    this.getResumeData();
+  getDefault() {
+    $.ajax({
+      url: "./resumeData.json",
+      dataType: "json",
+      cache: false,
+      success: function (data) {
+        this.setState({ default: data });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.log(err);
+        alert(err);
+      },
+    });
   }
 
+  componentDidMount() {
+    this.getResumeData();
+    this.getDefault();
+  }
 
   render() {
     return (
       <div className="App">
-        {  console.log(this.state.resumeData)
-}
-        <Header data={this.state.resumeData.main}/>
-        <About data={this.state.resumeData.main}/>
-        <Resume data={this.state.resumeData.resume}/>
-        <Portfolio data={this.state.resumeData.portfolio}/>
-        <Contact data={this.state.resumeData.main}/>
-        <Footer data={this.state.resumeData.main}/>
+        {console.log(Object.keys(this.state.resumeData).length ===0)}
+        {console.log(this.state.default)}
+        {Object.keys(this.state.resumeData).length !==0 ? (
+          <div>
+            <Header data={this.state.resumeData} />
+            <About data={this.state.resumeData} />
+            <Resume data={this.state.resumeData} />
+            {/* <Portfolio data={this.state.resumeData.portfolio} /> */}
+            <Contact data={this.state.resumeData} />
+            <Footer data={this.state.resumeData} />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     );
   }
-}             
+}
 
 export default App;
