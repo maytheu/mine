@@ -6,6 +6,8 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+app.use(cors({credentials: true,
+  origin: "http://localhost:3000"}));
 
 require("./models/mainSchema.js");
 require("./models/userSchema.js");
@@ -17,7 +19,6 @@ mongoose.connect(process.env.DATABASE_URL, {
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 
 require("./routes/user")(app);
 require("./routes/resume")(app);

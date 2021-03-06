@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const mainSchema = mongoose.Schema({
   city: String,
+  name: String,
+  phone: String,
   state: String,
   street: String,
   bio: String,
@@ -9,7 +11,7 @@ const mainSchema = mongoose.Schema({
   description: String,
   email: String,
   git: String,
-  download: String,
+  resume: String,
   web: String,
   social: [],
   education: [],

@@ -1,13 +1,71 @@
 import React, { Component } from "react";
+import axios from 'axios'
 
 class Contact extends Component {
+  state = {
+    data: {
+      email: {
+        value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+      },
+      name: {
+        value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+      },
+      subject: {
+        value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+      },
+      message: {
+        value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+      },
+    },
+  };
+
+  handleChange = (element) => {
+    const updatedOrderForm = { ...this.state.data };
+    const updatedFormElement = { ...updatedOrderForm[element] };
+
+    updatedFormElement.value = element.event.target.value;
+    updatedOrderForm[element.id] = updatedFormElement;
+
+    let formValid = true;
+    formValid = updatedOrderForm[element.id].valid && formValid;
+
+    this.setState({ data: updatedOrderForm, isValidForm: formValid });
+  };
+
+  handlesubmit(event) {
+    event.preventDefault();
+    let data = {
+      name: this.state.data.name.value,
+      email: this.state.data.email.value,
+      subject: this.state.data.subject.value,
+      message: this.state.data.message.value,
+    };
+    console.log(data);
+  }
+
   render() {
+   console.log( this.state.data)
     if (this.props.data) {
       var name = this.props.data.name;
       var street = this.props.data.street;
       var city = this.props.data.city;
       var state = this.props.data.state;
-      // var zip = this.props.data.zip;
       var phone = this.props.data.phone;
       var email = this.props.data.email;
       var message = this.props.data.contactmessage;
@@ -29,7 +87,7 @@ class Contact extends Component {
 
         <div className="row">
           <div className="eight columns">
-            <form action="" method="post" id="contactForm" name="contactForm">
+            <form onSubmit={e=>this.handlesubmit(e)}>
               <fieldset>
                 <div>
                   <label htmlFor="contactName">
@@ -37,11 +95,12 @@ class Contact extends Component {
                   </label>
                   <input
                     type="text"
-                    defaultValue=""
                     size="35"
-                    id="contactName"
-                    name="contactName"
-                    onChange={this.handleChange}
+                    name="name"
+                    value={this.state.data.name.value}
+                    onChange={(event) =>
+                      this.handleChange({ event, id: "name" })
+                    }
                   />
                 </div>
 
@@ -50,12 +109,13 @@ class Contact extends Component {
                     Email <span className="required">*</span>
                   </label>
                   <input
-                    type="text"
-                    defaultValue=""
+                    type="email"
                     size="35"
-                    id="contactEmail"
-                    name="contactEmail"
-                    onChange={this.handleChange}
+                    name="email"
+                    value={this.state.data.email.value}
+                    onChange={(event) =>
+                      this.handleChange({ event, id: "email" })
+                    }
                   />
                 </div>
 
@@ -63,11 +123,13 @@ class Contact extends Component {
                   <label htmlFor="contactSubject">Subject</label>
                   <input
                     type="text"
-                    defaultValue=""
                     size="35"
-                    id="contactSubject"
+                    id="subject"
                     name="contactSubject"
-                    onChange={this.handleChange}
+                    value={this.state.data.subject.value}
+                    onChange={(event) =>
+                      this.handleChange({ event, id: "subject" })
+                    }
                   />
                 </div>
 
@@ -78,13 +140,18 @@ class Contact extends Component {
                   <textarea
                     cols="50"
                     rows="15"
-                    id="contactMessage"
-                    name="contactMessage"
+                    name="message"
+                    value={this.state.data.message.value}
+                    onChange={(event) =>
+                      this.handleChange({ event, id: "message" })
+                    }
                   ></textarea>
                 </div>
 
                 <div>
-                  <button className="submit">Submit</button>
+                  <button className="submit" onSubmit={this.handlesubmit}>
+                    Submit
+                  </button>
                   <span id="image-loader">
                     <img alt="" src="images/loader.gif" />
                   </span>
@@ -113,7 +180,7 @@ class Contact extends Component {
               </p>
             </div>
 
-            <div className="widget widget_tweets">
+            {/* <div className="widget widget_tweets">
               <h4 className="widget-title">Latest Tweets</h4>
               <ul id="twitter">
                 <li>
@@ -140,7 +207,7 @@ class Contact extends Component {
                   </b>
                 </li>
               </ul>
-            </div>
+            </div> */}
           </aside>
         </div>
       </section>

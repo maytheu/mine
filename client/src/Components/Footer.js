@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 class Footer extends Component {
   state = {
@@ -26,6 +27,40 @@ class Footer extends Component {
       },
     },
   };
+
+  handleChange = (element) => {
+    const updatedOrderForm = { ...this.state.data };
+    const updatedFormElement = { ...updatedOrderForm[element] };
+
+    updatedFormElement.value = element.event.target.value;
+    updatedOrderForm[element.id] = updatedFormElement;
+
+    let formValid = true;
+    formValid = updatedOrderForm[element.id].valid && formValid;
+
+    this.setState({ data: updatedOrderForm, isValidForm: formValid });
+  };
+
+  updateHandler(event) {
+    event.preventDefault();
+    let data = {
+      name: this.state.data.name.value,
+      url: this.state.data.url.value,
+      className: this.state.data.className.value,
+    };
+    axios
+      .post("http://localhost:3001/api/user/socials", data, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("Resume updated successfully");
+        } else {
+          alert("Can't update resume at the moment");
+        }
+      });
+  }
+
   render() {
     if (this.props.data) {
       var networks = this.props.data.social.map(function (network) {
@@ -68,11 +103,7 @@ class Footer extends Component {
           <div className="row">
             <div className="three columns">
               <div className="eight columns">
-                <form
-                  onSubmit={(event) => this.updateHandler(event)}
-                  id="social"
-                  name="social"
-                >
+                <form onSubmit={(event) => this.updateHandler(event)}>
                   <fieldset>
                     <div>
                       <label htmlFor="name">

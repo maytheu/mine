@@ -157,4 +157,16 @@ module.exports = (app) => {
       return res.status(200).json({ success: true, address: address[0] });
     });
   });
+
+  app.get("/api/download/:doc", (req, res) => {
+    const doc = req.params.doc;
+    console.log(doc)
+    return res.download(
+      path.join(__dirname, `../uploads/${doc}`),
+      doc,
+      (err) => {
+        if (err) return res.status(500).send("Can't download file");
+      }
+    );
+  });
 };

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 class Resume extends Component {
   state = {
@@ -66,15 +67,10 @@ class Resume extends Component {
         },
         valid: false,
       },
-      skillMessage: {
-        value: "",
-        validation: {
-          required: true,
-        },
-        valid: false,
-      },
+      
     },
   };
+
   getRandomColor() {
     var letters = "0123456789ABCDEF";
     var color = "#";
@@ -84,9 +80,83 @@ class Resume extends Component {
     return color;
   }
 
+  handleChange = (element) => {
+    const updatedOrderForm = { ...this.state.data };
+    const updatedFormElement = { ...updatedOrderForm[element] };
+
+    updatedFormElement.value = element.event.target.value;
+    updatedOrderForm[element.id] = updatedFormElement;
+
+    let formValid = true;
+    formValid = updatedOrderForm[element.id].valid && formValid;
+
+    this.setState({ data: updatedOrderForm, isValidForm: formValid });
+  };
+
+  educationHandler(event) {
+    event.preventDefault();
+    let data = {
+      degree: this.state.data.degree.value,
+      description: this.state.data.description.value,
+      school: this.state.data.school.value,
+      graduated: this.state.data.graduated.value,
+    };
+    axios
+      .post("http://localhost:3001/api/user/education", data, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("Resume updated successfully");
+        } else {
+          alert("Can't update resume at the moment");
+        }
+      });
+  }
+
+  workHandler(event) {
+    event.preventDefault();
+    let data = {
+      company: this.state.data.company.value,
+      description: this.state.data.description.value,
+      title: this.state.data.title.value,
+      years: this.state.data.years.value,
+    };
+    axios
+      .post("http://localhost:3001/api/user/work", data, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("Resume updated successfully");
+        } else {
+          alert("Can't update resume at the moment");
+        }
+      });
+  }
+
+  skillsHandler(event) {
+    event.preventDefault();
+    let data = {
+      name: this.state.data.name.value,
+      level: this.state.data.level.value,
+    };
+    axios
+      .post("http://localhost:3001/api/user/skills", data, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("Resume updated successfully");
+        } else {
+          alert("Can't update resume at the moment");
+        }
+      });
+  }
+
   render() {
     if (this.props.data) {
-      var skillmessage = this.props.data.skillmessage;
+      var skillMessage = this.props.data.skillMessage;
       var education = this.props.data.education.map(function (education) {
         return (
           <div key={education.school}>
@@ -99,6 +169,7 @@ class Resume extends Component {
           </div>
         );
       });
+
       var work = this.props.data.work.map(function (work) {
         return (
           <div key={work.company}>
@@ -132,14 +203,10 @@ class Resume extends Component {
     return (
       <section id="resume">
         {this.props.data === undefined ? (
-          <div className="row">
+          <div className="row banner">
             <div className="three columns">
               <div className="eight columns">
-                <form
-                  onSubmit={(event) => this.updateHandler(event)}
-                  id="about"
-                  name="about"
-                >
+                <form onSubmit={(event) => this.educationHandler(event)}>
                   <fieldset>
                     <div>
                       <label htmlFor="degree">
@@ -200,7 +267,7 @@ class Resume extends Component {
                     <div>
                       <button
                         className="submit"
-                        onSubmit={(event) => this.updateHandler(event)}
+                        onSubmit={(event) => this.educationHandler(event)}
                       >
                         Add Education
                       </button>
@@ -211,7 +278,7 @@ class Resume extends Component {
             </div>
           </div>
         ) : (
-          <div className="row education">
+          <div className="row">
             <div className="three columns header-col">
               <h1>
                 <span>Education</span>
@@ -227,14 +294,10 @@ class Resume extends Component {
         )}
 
         {this.props.data === undefined ? (
-          <div className="row">
+          <div className="row work">
             <div className="three columns">
               <div className="eight columns">
-                <form
-                  onSubmit={(event) => this.updateHandler(event)}
-                  id="about"
-                  name="about"
-                >
+                <form onSubmit={(event) => this.workHandler(event)}>
                   <fieldset>
                     <div>
                       <label htmlFor="company">
@@ -295,7 +358,7 @@ class Resume extends Component {
                     <div>
                       <button
                         className="submit"
-                        onSubmit={(event) => this.updateHandler(event)}
+                        onSubmit={(event) => this.workHandler(event)}
                       >
                         Add Work
                       </button>
@@ -317,14 +380,10 @@ class Resume extends Component {
           </div>
         )}
         {this.props.data === undefined ? (
-          <div className="row">
+          <div className="row skills">
             <div className="three columns">
               <div className="eight columns">
-                <form
-                  onSubmit={(event) => this.updateHandler(event)}
-                  id="about"
-                  name="about"
-                >
+                <form onSubmit={(event) => this.skillsHandler(event)}>
                   <fieldset>
                     <div>
                       <label htmlFor="name">
@@ -342,7 +401,7 @@ class Resume extends Component {
                     </div>
                     <div>
                       <label htmlFor="level">
-                        Level <span className="required">*</span>
+                        Level <span className="required">add % to your value</span>
                       </label>
                       <input
                         type="text"
@@ -357,7 +416,7 @@ class Resume extends Component {
                     <div>
                       <button
                         className="submit"
-                        onSubmit={(event) => this.updateHandler(event)}
+                        onSubmit={(event) => this.skillsHandler(event)}
                       >
                         Add Skills
                       </button>
@@ -376,7 +435,7 @@ class Resume extends Component {
             </div>
 
             <div className="nine columns main-col">
-              <p>{skillmessage}</p>
+              <p>{skillMessage}</p>
 
               <div className="bars">
                 <ul className="skills">{skills}</ul>

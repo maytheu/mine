@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ParticlesBg from "particles-bg";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import axios from "axios";
 
 class Header extends Component {
   state = {
@@ -40,19 +41,43 @@ class Header extends Component {
     success: "",
   };
 
+  updateFields = (data) => {
+    const newFormData = { ...this.state.data };
+    for (let key in newFormData) {
+      newFormData[key].value = data[key];
+      newFormData[key].valid = true;
+    }
+
+    this.setState({
+      data: newFormData,
+    });
+  };
+
+  getUpdateData() {
+    axios({
+      method: "GET",
+      url: "http://localhost:3001/api/about",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      if (res.data.success) {
+        this.updateFields(res.data.address);
+      } else {
+        alert("Can't get user details");
+      }
+    });
+  }
+
+  componentDidMount() {
+    if (this.props.auth) {
+      this.getUpdateData();
+    }
+  }
+
   handleChange = (element) => {
-    const updatedOrderForm = {
-      ...this.state.data,
-    };
-    const updatedFormElement = {
-      ...updatedOrderForm[element],
-    };
+    const updatedOrderForm = { ...this.state.data };
+    const updatedFormElement = { ...updatedOrderForm[element] };
 
     updatedFormElement.value = element.event.target.value;
-    // updatedFormElement.valid = checkValidity(
-    //   updatedFormElement.value,
-    //   updatedFormElement.validation
-    // );
     updatedOrderForm[element.id] = updatedFormElement;
 
     let formValid = true;
@@ -61,15 +86,53 @@ class Header extends Component {
     this.setState({ data: updatedOrderForm, isValidForm: formValid });
   };
 
-  submitHandler = (event) => {
+  loginHandler = (event) => {
     event.preventDefault();
     let submit = {
       email: this.state.data.email.value,
       password: this.state.data.password.value,
     };
-    console.log(submit);
-    //console.log(id)
+    axios
+      .post("http://localhost:3001/api/user_login", submit, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          this.props.history.push("/admin/maytheu/resume");
+        } else {
+          this.setState({ success: "Invalid email or password" });
+        }
+      });
   };
+
+  handleLogout(event) {
+    event.preventDefault();
+    axios({
+      method: "GET",
+      url: "http://localhost:3001/api/user_logout",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => this.props.history.push("/"));
+  }
+
+  updateHandler(event) {
+    event.preventDefault();
+    let data = {
+      name: this.state.data.name.value,
+      description: this.state.data.description.value,
+    };
+    axios
+      .post("http://localhost:3001/api/user/edit_about", data, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("Resume updated successfully");
+        } else {
+          alert("Can't update resume at the moment");
+        }
+      });
+  }
 
   render() {
     if (this.props.data) {
@@ -95,18 +158,14 @@ class Header extends Component {
         {this.props.data === undefined && this.props.auth === undefined ? (
           <div className="row banner">
             <div className="eight columns">
-              <form
-                onSubmit={(event) => this.submitHandler(event)}
-                id="signin"
-                name="signin"
-              >
+              <form onSubmit={(event) => this.loginHandler(event)}>
                 <fieldset>
                   <div>
                     <label htmlFor="email">
                       Email <span className="required">*</span>
                     </label>
                     <input
-                      type='email'
+                      type="email"
                       size="35"
                       name="email"
                       value={this.state.data.email.value}
@@ -132,13 +191,14 @@ class Header extends Component {
                   <div>
                     <button
                       className="submit"
-                      onSubmit={(event) => this.submitHandler(event)}
+                      onSubmit={(event) => this.loginHandler(event)}
                     >
                       Submit
                     </button>
                   </div>
                 </fieldset>
               </form>
+              {this.state.success === "" ? "" : this.state.success}
             </div>
           </div>
         ) : this.props.data !== undefined ? (
@@ -206,6 +266,15 @@ class Header extends Component {
                 <a className="smoothscroll" href="#contact">
                   Contact
                 </a>
+              </li>
+              <li>
+                <div
+                  className="smoothscroll"
+                  style={{ cursor: "pointer", color: "#fff" }}
+                  onClick={(event) => this.handleLogout(event)}
+                >
+                  Logout
+                </div>
               </li>
             </ul>
           </nav>
@@ -289,4 +358,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default withRouter(Header);
