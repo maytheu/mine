@@ -63,6 +63,13 @@ class About extends Component {
         },
         valid: false,
       },
+      deleteFile: {
+        value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+      },
     },
   };
 
@@ -166,6 +173,23 @@ class About extends Component {
           alert("Can't update resume at the moment");
         }
       });
+  }
+
+  deleteHandler(event){
+    event.preventDefault()
+    let data={del:this.state.data.deleteFile.value}
+    axios
+    .post("http://localhost:3001/api/user/upload/del", data, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      if (res.data.success) {
+        alert("Resume Deleted successfully");
+      } else {
+        alert("Can't delete resume at the moment");
+      }
+    });
+
   }
 
   render() {
@@ -322,6 +346,31 @@ class About extends Component {
                     <button
                       className="submit"
                       onClick={(event) => this.docHandler(event)}
+                    >
+                      Upload
+                    </button>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div>
+                    <label htmlFor="delete">
+                      Delete <span className="required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="deleteFile"
+                      size="35"
+                      value={this.state.data.deleteFile.value}
+                      onChange={(event) =>
+                        this.handleChange({ event, id: "deleteFile" })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <button
+                      className="submit"
+                      onClick={(event) => this.deleteHandler(event)}
                     >
                       Upload
                     </button>

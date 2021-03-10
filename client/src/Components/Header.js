@@ -136,20 +136,8 @@ class Header extends Component {
 
   render() {
     if (this.props.data) {
-      var project = this.props.data.project;
-      var github = this.props.data.github;
       var name = this.props.data.name;
       var description = this.props.data.description;
-      var city = this.props.data.city;
-      var networks = this.props.data.social.map(function (network) {
-        return (
-          <li key={network.name}>
-            <a href={network.url}>
-              <i className={network.className}></i>
-            </a>
-          </li>
-        );
-      });
     }
 
     return (
@@ -289,10 +277,10 @@ class Header extends Component {
               <h3>{description}.</h3>
               <hr />
               <ul className="social">
-                <a href={project} className="button btn project-btn">
-                  <i className="fa fa-book"></i>Project
-                </a>
-                <a href={github} className="button btn github-btn">
+                <a
+                  href="https://github.com/maytheu"
+                  className="button btn github-btn"
+                >
                   <i className="fa fa-github"></i>Github
                 </a>
               </ul>

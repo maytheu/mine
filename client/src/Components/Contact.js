@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from 'axios'
+import axios from "axios";
 
 class Contact extends Component {
   state = {
@@ -56,18 +56,22 @@ class Contact extends Component {
       subject: this.state.data.subject.value,
       message: this.state.data.message.value,
     };
-    console.log(data);
+    axios.post("http://localhost:3001/api/contact", data).then((res) => {
+      if (res.data.success) {
+        alert("Contact send successfully, i'll get back to you within 48hours");
+      } else {
+        alert("Can't send contact at the moment");
+      }
+    });
   }
 
   render() {
-   console.log( this.state.data)
     if (this.props.data) {
       var name = this.props.data.name;
       var street = this.props.data.street;
       var city = this.props.data.city;
       var state = this.props.data.state;
       var phone = this.props.data.phone;
-      var email = this.props.data.email;
       var message = this.props.data.contactmessage;
     }
 
@@ -87,7 +91,7 @@ class Contact extends Component {
 
         <div className="row">
           <div className="eight columns">
-            <form onSubmit={e=>this.handlesubmit(e)}>
+            <form onSubmit={(e) => this.handlesubmit(e)}>
               <fieldset>
                 <div>
                   <label htmlFor="contactName">
@@ -179,35 +183,6 @@ class Contact extends Component {
                 <span>{phone}</span>
               </p>
             </div>
-
-            {/* <div className="widget widget_tweets">
-              <h4 className="widget-title">Latest Tweets</h4>
-              <ul id="twitter">
-                <li>
-                  <span>
-                    This is Photoshop's version of Lorem Ipsum. Proin gravida
-                    nibh vel velit auctor aliquet. Aenean sollicitudin, lorem
-                    quis bibendum auctor, nisi elit consequat ipsum
-                    <a href="#">http://t.co/CGIrdxIlI3</a>
-                  </span>
-                  <b>
-                    <a href="#">2 Days Ago</a>
-                  </b>
-                </li>
-                <li>
-                  <span>
-                    Sed ut perspiciatis unde omnis iste natus error sit
-                    voluptatem accusantium doloremque laudantium, totam rem
-                    aperiam, eaque ipsa quae ab illo inventore veritatis et
-                    quasi
-                    <a href="#">http://t.co/CGIrdxIlI3</a>
-                  </span>
-                  <b>
-                    <a href="#">3 Days Ago</a>
-                  </b>
-                </li>
-              </ul>
-            </div> */}
           </aside>
         </div>
       </section>

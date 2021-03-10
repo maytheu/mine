@@ -2,13 +2,29 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const mailer = require("nodemailer");
 
 const Main = mongoose.model("mains");
 
 const check = require("../utils/check");
 const userAuth = require("../utils/userAuth");
 
-var storage = multer.diskStorage({
+
+const transport = {
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    type:"OAuth2",
+    user: process.env.EMAIL,
+    clientId: process.env.GOOGLE_CLIENT,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    refreshToken: process.env.GOOGLE_REFRESH,
+    accessToken: process.env.GOOGLE_ACCESS  },
+};
+ const transporter = mailer.createTransport(transport)
+
+ var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "../uploads/"));
   },
@@ -146,9 +162,20 @@ module.exports = (app) => {
     });
   });
 
-  app.get("/api/user/upload/del", userAuth, (req, res) => {
-    const { file } = req.query;
-    fs.unlink(path.join(__dirname, `../uploads/${file}`));
+  app.post("/api/user/upload/del", userAuth, (req, res) => {
+    const { del } = req.body;
+    fs.unlink(path.join(__dirname, `../uploads/${del}`), (err) => {
+      if (err) return res.status(500).send("Cant delete file");
+      Main.findOneAndUpdate(
+        { email: req.user.email },
+        { $set: { resume: "" } },
+        (err) => {
+          if (err) return res.status(403).send({ success: false, err });
+          return res.status(200).json({ success: true });
+        }
+      );
+      return res.status(200).json({ success: true });
+    });
   });
 
   app.get("/api/about", (req, res) => {
@@ -160,12 +187,32 @@ module.exports = (app) => {
 
   app.get("/api/download/:doc", (req, res) => {
     const doc = req.params.doc;
-    console.log(doc)
     return res.download(
       path.join(__dirname, `../uploads/${doc}`),
       doc,
       (err) => {
         if (err) return res.status(500).send("Can't download file");
+      }
+    );
+  });
+
+  app.post("/api/contact", (req, res) => {
+    const { name, subject, message, email } = req.body;
+    if (
+      check.verifyContent(name) ||
+      check.verifyContent(subject) ||
+      check.verifyContent(message) ||
+      check.verifyContent(email)
+    )
+      return res
+        .status(500)
+        .send({ success: false, err: "Invalid Parameter parsing" });
+    transporter.sendMail(
+      { from: email, to: process.env.RESUME_EMAIL, subject, text: message },
+      (err) => {
+        if (err) return res.status(403).send("Can't send email");
+        transporter.close()
+        return res.status(200).json({ success: true });
       }
     );
   });
