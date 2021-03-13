@@ -2,13 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const path = require('path')
-
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
-app.use(cors({credentials: true,
-  origin: "https://maytheuresume.herokuapp.com/"}));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 require("./models/mainSchema.js");
 require("./models/userSchema.js");
