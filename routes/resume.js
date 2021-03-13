@@ -197,7 +197,8 @@ module.exports = (app) => {
   });
 
   app.post("/api/contact", (req, res) => {
-    const { name, subject, message, email } = req.body;
+    const { name, subject, email } = req.body;
+    const message = `${req.body} - sent from ${email}`
     if (
       check.verifyContent(name) ||
       check.verifyContent(subject) ||
