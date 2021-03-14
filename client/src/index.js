@@ -4,7 +4,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import "./index.css";
 import App from "./App";
-import registerServiceWorker from "./registerServiceWorker";
+//import registerServiceWorker from "./registerServiceWorker";
 import Signin from "./Components/Admin/Signin";
 import EditPage from "./Components/Admin/EditPage";
 
@@ -18,4 +18,4 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById("root")
 );
-registerServiceWorker();
+//registerServiceWorker();
