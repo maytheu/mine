@@ -187,6 +187,7 @@ module.exports = (app) => {
 
   app.get("/api/download/:doc", (req, res) => {
     const doc = req.params.doc;
+    console.log(doc)
     return res.download(
       path.join(__dirname, `../uploads/${doc}`),
       doc,
