@@ -6,7 +6,6 @@ const path = require("path");
 require("dotenv").config();
 
 const app = express();
-// app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 require("./models/mainSchema.js");
 require("./models/userSchema.js");
@@ -19,6 +18,10 @@ mongoose.connect(process.env.DATABASE_URL, {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use(cors(
+  //{ credentials: true, origin: "http://localhost:3000" }
+  ));
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
