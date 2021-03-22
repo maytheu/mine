@@ -1,0 +1,24 @@
+.container{
+    padding: 25px;
+}
+
+.title{
+    font-size: 3rem;
+    font-family: emoji;
+    font-weight: 600;
+    padding-bottom: 20px;
+}
+
+.desc{
+    font-size: 1.5rem;
+    font-style: italic;
+    font-family: serif;
+}
+
+.contact{
+    text-align: start;
+}
+
+.contact-info{
+    padding-bottom: 10px;
+}

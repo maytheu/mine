@@ -1,0 +1,16 @@
+.form {
+  border: 1px dashed;
+  padding: 2rem;
+}
+
+.input-text {
+  font-style: italic;
+  padding-bottom: 1rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0px 10px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}

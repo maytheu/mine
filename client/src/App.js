@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import "./layout.css";
 import axios from "axios";
+
+import Header from "./components/Header";
+import Contact from "./components/Contact";
+import Education from "./components/Education";
+import Skills from "./components/Skills";
+import Project from "./components/Project";
 
 function App() {
   const [userData, setUserData] = useState({});
-  const [ loading, setLoading ] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get("/api/about").then((res) => {
@@ -26,7 +33,12 @@ function App() {
           <img src={logo} className="App-logo" alt="logo" />
         </header>
       ) : (
-        <header className="App-header">loaded
+        <header>
+          <Header data={userData} />
+          <Contact data={userData} />
+          <Education data={userData} />
+          <Skills data={userData} />
+          <Project data={userData} />
         </header>
       )}
     </div>
