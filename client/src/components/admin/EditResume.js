@@ -9,24 +9,22 @@ import Header from "../Header";
 import Project from "../Project";
 import Skills from "../Skills";
 
-function EditResume({ data }) {
-  const [userData, setUserData] = useState({});
+function EditResume() {
   const [loading, setLoading] = useState(true);
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState({});
+  const [userData, setUserData] = useState({});
 
-  useEffect(() => {
+  function getAuth() {
     axios.get("/api/user_auth").then((res) => {
-        console.log(res)
-      if (res.data.success) {
-        // axios.get("/api/about").then((res) => {
-        //   if (res.data.success) {
-            setLoading(false);
-            // setUserData(res.data.address);
-            setAuth(true);
-        //   }
-        // });
-      }
+      axios.get("/api/about").then((resp) => {
+        setUserData(resp.data.address);
+        setLoading(false);
+        setAuth(res.data);
+      });
     });
+  }
+  useEffect(() => {
+    getAuth();
   }, []);
 
   return (
@@ -35,16 +33,20 @@ function EditResume({ data }) {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
         </header>
-      ) : auth ? (
-        <header>
-          <Header data={userData} />
-          <Contact data={userData} />
-          <Education data={userData} />
-          <Skills data={userData} />
-          <Project data={userData} />
-        </header>
+      ) : Object.keys(auth).length !== 0 ? (
+        auth.error ? (
+          <Redirect to="/" />
+        ) : (
+          <header>
+            <Header auth={auth} data={userData} />
+            <Contact auth={auth} data={userData} />
+            <Education auth={auth} data={userData} />
+            <Skills auth={auth} data={userData} />
+            <Project auth={auth} data={userData} />
+          </header>
+        )
       ) : (
-        <Redirect to="/" />
+        ""
       )}
     </div>
   );

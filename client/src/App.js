@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import logo from "./logo.svg";
 import "./App.css";
 import "./layout.css";
@@ -9,10 +10,12 @@ import Contact from "./components/Contact";
 import Education from "./components/Education";
 import Skills from "./components/Skills";
 import Project from "./components/Project";
+import Form from "./components/Form";
 
 function App() {
   const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [auth, setAuth]=useState({isUser: false})
 
   useEffect(() => {
     axios.get("/api/about").then((res) => {
@@ -34,11 +37,12 @@ function App() {
         </header>
       ) : (
         <header>
-          <Header data={userData} />
-          <Contact data={userData} />
-          <Education data={userData} />
-          <Skills data={userData} />
-          <Project data={userData} />
+          <Header data={userData} auth={auth} />
+          <Contact data={userData} auth={auth} />
+          <Education data={userData} auth={auth} />
+          <Skills data={userData} auth={auth} />
+          <Project data={userData} auth={auth} />
+          <Form />
         </header>
       )}
     </div>

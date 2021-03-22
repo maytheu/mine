@@ -1,6 +1,7 @@
 .form {
   border: 1px dashed;
   padding: 2rem;
+  width: 100%;
 }
 
 .input-text {

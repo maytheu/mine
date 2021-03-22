@@ -14,9 +14,9 @@ function Signin(props) {
 
   function login() {
     axios.post("/api/user_login", values).then((res) => {
-        console.log(res.status)
       if (res.status === 200)
         return props.history.push("/admin/maytheu/resume");
+      alert("You're not allowed here");
       props.history.push("/");
     });
   }
