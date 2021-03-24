@@ -22,6 +22,10 @@ function Education({ data, auth }) {
     }
   }
 
+  function del(id) {
+    axios.get(`/api/user/education/delete?id=${id}`);
+  }
+
   return (
     <Container className="container">
       <Row>
@@ -29,60 +33,71 @@ function Education({ data, auth }) {
           <h2 className="title">Education</h2>
         </Col>
       </Row>
-      {auth?auth.isUser ? (
-        <form className="form" onSubmit={handleSubmit}>
+      {auth.isUser ? (
+        <>
+          <form className="form" onSubmit={handleSubmit}>
+            <Row>
+              <Col className="input-text">Degree class</Col>
+              <Col>
+                <input
+                  type="text"
+                  name="degree"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="input-text">School attended</Col>
+              <Col>
+                <input
+                  type="text"
+                  name="school"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="input-text">Year of graduation</Col>
+              <Col>
+                <input
+                  type="number"
+                  name="graduated"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="input-text">Description</Col>
+              <Col>
+                <textarea
+                  name="description"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Button onSubmit={handleSubmit} outline color="primary">
+                  <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
+                </Button>
+              </Col>
+            </Row>
+          </form>
           <Row>
-            <Col className="input-text">Degree class</Col>
-            <Col>
-              <input
-                type="text"
-                name="degree"
-                onChange={handleChange}
-                className="input"
-              />
-            </Col>
+            {data.education
+              ? data.education.map((find, i) => (
+                  <Col key={i}>
+                    <Button onClick={() => del(find.id)}>{find.school}</Button>
+                  </Col>
+                ))
+              : ""}
           </Row>
-          <Row>
-            <Col className="input-text">School attended</Col>
-            <Col>
-              <input
-                type="text"
-                name="school"
-                onChange={handleChange}
-                className="input"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col className="input-text">Year of graduation</Col>
-            <Col>
-              <input
-                type="text"
-                name="graduated"
-                onChange={handleChange}
-                className="input"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col className="input-text">Description</Col>
-            <Col>
-              <textarea
-                name="description"
-                onChange={handleChange}
-                className="input"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Button onSubmit={handleSubmit} outline color="primary">
-                <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
-              </Button>
-            </Col>
-          </Row>
-        </form>
-      ) :'': data.education ? (
+        </>
+      ) : data.education ? (
         data.education.map((school, i) => (
           <div key={i}>
             <Row>

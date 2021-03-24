@@ -46,8 +46,7 @@ function Contact({ data, auth }) {
   }
 
   function del(id) {
-    console.log(id);
-    console.log(auth);
+    axios.get(`/api/user/socials/delete?id=${id}`);
   }
   return (
     <Container className="container">
@@ -147,6 +146,15 @@ function Contact({ data, auth }) {
               </Col>
             </Row>
           </form>
+          <Row>
+            {data.social
+              ? data.social.map((find, i) => (
+                  <Col key={i}>
+                    <Button onClick={() => del(find.id)}>{find.name}</Button>
+                  </Col>
+                ))
+              : ""}
+          </Row>
         </>
       ) : (
         <>
@@ -176,13 +184,9 @@ function Contact({ data, auth }) {
                 {data.social
                   ? data.social.map((find, i) => (
                       <Col key={i}>
-                        {!auth.isUser ? (
-                          <a href={find.url}>
-                            <i className={find.className}></i>
-                          </a>
-                        ) : (
-                          <Button onClick={() => del(find.id)}></Button>
-                        )}
+                        <a href={find.url}>
+                          <i className={`socials ${find.className}`}></i>
+                        </a>
                       </Col>
                     ))
                   : ""}
@@ -191,7 +195,7 @@ function Contact({ data, auth }) {
                 <Col>
                   <p style={{ marginTop: "2rem" }}>
                     <Button outline color="info" onClick={download}>
-                      <i className="fa fa-download"></i>Download Resume
+                      <i className="fa fa-download"></i> Download Resume
                     </Button>
                   </p>
                 </Col>

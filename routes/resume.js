@@ -65,11 +65,12 @@ module.exports = (app) => {
       return res
         .status(500)
         .send({ success: false, err: "Invalid Parameter parsing" });
-    let socials = [];
-    socials.push({ className, name, url, id: d.getTime() });
+    const social = [];
+    let id = `social-${d.getTime()}`;
+    social.push({ className, name, url, id });
     Main.findOneAndUpdate(
       { email: req.user.email },
-      { $push: { social: socials } },
+      { $push: { social } },
       { new: true },
       (err) => {
         if (err) return res.status(403).send({ success: false, err });
@@ -101,10 +102,11 @@ module.exports = (app) => {
         .status(500)
         .send({ success: false, err: "Invalid Parameter parsing" });
     let education = [];
-    education.push({ degree, school, graduated, description, id: d.getTime() });
+    let id = `edu-${d.getTime()}`;
+    education.push({ degree, school, graduated, description, id });
     Main.findOneAndUpdate(
       { email: req.user.email },
-      { $push: { education: education } },
+      { $push: { education } },
       { new: true },
       (err) => {
         if (err) return res.status(403).send({ success: false, err });
@@ -131,10 +133,11 @@ module.exports = (app) => {
         .send({ success: false, err: "Invalid Parameter parsing" });
     let d = new Date();
     let skills = [];
-    skills.push({ name, level, id: d.getTime() });
+    let id = `skills-${d.getTime()}`;
+    skills.push({ name, level, id });
     Main.findOneAndUpdate(
       { email: req.user.email },
-      { $push: { skills: skills } },
+      { $push: { skills } },
       { new: true },
       (err) => {
         if (err) return res.status(403).send({ success: false, err });
@@ -166,10 +169,11 @@ module.exports = (app) => {
         .status(500)
         .send({ success: false, err: "Invalid Parameter parsing" });
     let work = [];
-    work.push({ link, github, title, description, id: d.getTime() });
+    let id = `work-${d.getTime()}`;
+    work.push({ link, github, title, description, id });
     Main.findOneAndUpdate(
       { email: req.user.email },
-      { $push: { work: work } },
+      { $push: { work } },
       { new: true },
       (err) => {
         if (err) return res.status(403).send({ success: false, err });
@@ -260,8 +264,7 @@ module.exports = (app) => {
         text: `${message} from ${email}`,
       },
       (err) => {
-        console.log(err);
-        if (err) return res.status(403).send("Can't send email");
+        if (err) return res.json({success: false});
         transporter.close();
         return res.status(200).json({ success: true });
       }

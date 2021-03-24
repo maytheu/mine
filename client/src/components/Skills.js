@@ -49,100 +49,107 @@ function Skills({ data, auth }) {
     }
   }
 
+  function del(id) {
+    axios.get(`/api/user/skills/delete?id=${id}`);
+  }
+
   return (
     <Container className="container">
       <Row>
         <Col>
-          <h2 className="title">
-            {!auth ? "Skills and Socials" : "Skills"}
-          </h2>
+          <h2 className="title">{!auth ? "Skills and Socials" : "Skills"}</h2>
         </Col>
       </Row>
       <Row>
         <Col className="desc">{data.bio}</Col>
       </Row>
-      {auth ? (
-        auth.isUser ? (
-          <>
-            <form className="form" onSubmit={handleSubmit}>
-              <Row>
-                <Col className="input-text">Language</Col>
-                <Col>
-                  <input
-                    type="text"
-                    name="name"
-                    onChange={handleChange}
-                    className="input"
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col className="input-text">Level</Col>
-                <Col>
-                  <input
-                    type="number"
-                    name="level"
-                    onChange={handleChange}
-                    className="input"
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Button onSubmit={handleSubmit} outline color="primary">
-                    <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
-                    Skills
-                  </Button>
-                </Col>
-              </Row>
-            </form>
-            <form className="form" onSubmit={handleSubmit}>
-              <Row>
-                <Col className="input-text">fa className</Col>
-                <Col>
-                  <input
-                    type="text"
-                    name="className"
-                    onChange={handleChange}
-                    className="input"
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col className="input-text">Account Name</Col>
-                <Col>
-                  <input
-                    type="text"
-                    name="name"
-                    onChange={handleChange}
-                    className="input"
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col className="input-text">Url</Col>
-                <Col>
-                  <input
-                    type="text"
-                    name="url"
-                    onChange={handleChange}
-                    className="input"
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Button onSubmit={handleSubmit} outline color="primary">
-                    <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
-                    socials
-                  </Button>
-                </Col>
-              </Row>
-            </form>
-          </>
-        ) : (
-          ""
-        )
+      {auth.isUser ? (
+        <>
+          <form className="form" onSubmit={handleSubmit}>
+            <Row>
+              <Col className="input-text">Language</Col>
+              <Col>
+                <input
+                  type="text"
+                  name="name"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="input-text">Level</Col>
+              <Col>
+                <input
+                  type="number"
+                  name="level"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Button onSubmit={handleSubmit} outline color="primary">
+                  <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
+                  Skills
+                </Button>
+              </Col>
+            </Row>
+          </form>
+          <form className="form" onSubmit={handleSubmit}>
+            <Row>
+              <Col className="input-text">fa className</Col>
+              <Col>
+                <input
+                  type="text"
+                  name="className"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="input-text">Account Name</Col>
+              <Col>
+                <input
+                  type="text"
+                  name="name"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="input-text">Url</Col>
+              <Col>
+                <input
+                  type="text"
+                  name="url"
+                  onChange={handleChange}
+                  className="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Button onSubmit={handleSubmit} outline color="primary">
+                  <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
+                  socials
+                </Button>
+              </Col>
+            </Row>
+          </form>
+          <Row>
+            {data.skills
+              ? data.skills.map((find, i) => (
+                  <Col key={i}>
+                    <Button onClick={() => del(find.id)}>{find.name}</Button>
+                  </Col>
+                ))
+              : ""}
+          </Row>
+        </>
       ) : data.skills ? (
         data.skills.map((skill, i) => (
           <Row key={i}>

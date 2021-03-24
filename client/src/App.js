@@ -15,7 +15,7 @@ import Form from "./components/Form";
 function App() {
   const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(true);
-  const [auth, setAuth]=useState({isUser: false})
+  const [auth, setAuth] = useState({ isUser: false });
 
   useEffect(() => {
     axios.get("/api/about").then((res) => {

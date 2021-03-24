@@ -22,79 +22,82 @@ function Project({ data, auth }) {
     }
   }
 
-  function del(id){
-    console.log(id)
+  function del(id) {
+    axios.get(`/api/user/project/delete?id=${id}`);
   }
 
   return (
     <Container className="container">
       <Row>
         <Col>
-        {console.log(auth)}
           <h2 className="title">Project</h2>
         </Col>
       </Row>
       <Row>
-        {auth ? (
-          auth.isUser ? (
-            <>
-              <form className="form" onSubmit={handleSubmit}>
-                <Row>
-                  <Col className="input-text">Title</Col>
-                  <Col>
-                    <input
-                      type="text"
-                      name="title"
-                      onChange={handleChange}
-                      className="input"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="input-text">Link</Col>
-                  <Col>
-                    <input
-                      type="text"
-                      name="link"
-                      onChange={handleChange}
-                      className="input"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="input-text">Github link</Col>
-                  <Col>
-                    <input
-                      type="text"
-                      name="github"
-                      onChange={handleChange}
-                      className="input"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="input-text">Description</Col>
-                  <Col>
-                    <textarea
-                      name="description"
-                      onChange={handleChange}
-                      className="input"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Button onSubmit={handleSubmit} outline color="primary">
-                      <i className="fa fa-plus-circle" aria-hidden="true"></i>{" "}
-                      Add
-                    </Button>
-                  </Col>
-                </Row>
-              </form>
-            </>
-          ) : (
-            ""
-          )
+        {auth.isUser ? (
+          <>
+            <form className="form" onSubmit={handleSubmit}>
+              <Row>
+                <Col className="input-text">Title</Col>
+                <Col>
+                  <input
+                    type="text"
+                    name="title"
+                    onChange={handleChange}
+                    className="input"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col className="input-text">Link</Col>
+                <Col>
+                  <input
+                    type="text"
+                    name="link"
+                    onChange={handleChange}
+                    className="input"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col className="input-text">Github link</Col>
+                <Col>
+                  <input
+                    type="text"
+                    name="github"
+                    onChange={handleChange}
+                    className="input"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col className="input-text">Description</Col>
+                <Col>
+                  <textarea
+                    name="description"
+                    onChange={handleChange}
+                    className="input"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Button onSubmit={handleSubmit} outline color="primary">
+                    <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
+                  </Button>
+                </Col>
+              </Row>
+            </form>
+            <Row>
+              {data.work
+                ? data.work.map((find, i) => (
+                    <Col key={i}>
+                      <Button onClick={() => del(find.id)}>{find.title}</Button>
+                    </Col>
+                  ))
+                : ""}
+            </Row>
+          </>
         ) : data.work ? (
           data.work.map((project, i) => (
             <Col sm="4" key={i}>
@@ -112,7 +115,6 @@ function Project({ data, auth }) {
               </Row>
               <Row>
                 <Col>
-                  {auth ? <Button onClick={()=>del(project.id)}>delete</Button> : ""}
                   <a href={project.github}>
                     <Button outline color="info">
                       Find it on <i className="fa fa-github"></i>
