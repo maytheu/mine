@@ -153,7 +153,7 @@ function Skills({ data, auth }) {
       ) : data.skills ? (
         data.skills.map((skill, i) => (
           <Row key={i}>
-            <Col>
+            <Col style={{paddingBottom: '10px'}}>
               <em>{skill.name}</em>
               <Progress value={skill.level} color={getRandomColor()} />
             </Col>

@@ -14,13 +14,12 @@ function Form() {
 
   function sendMail() {
     axios.post("/api/contact", values).then((res) => {
-      console.log(res.data)
-      if (res.data.succes)
+      if (res.data.success)
         return alert(
-          "Thanks for contaxtingme, will get back to you in less than 48 hours"
+          "Thanks for contacting me, will get back to you in less than 48 hours"
         );
       alert(
-        "Yo can't send me a mail right now, you an send a personal mail via my email address displayed above"
+        "You can't send me a mail right now, you can reach me via my social handle"
       );
     });
   }
@@ -67,7 +66,7 @@ function Form() {
             </Col>
           </Row>
           <Row>
-            <Col className="input-text">Password</Col>
+            <Col className="input-text">Message</Col>
             <Col>
               <textarea
                 name="message"

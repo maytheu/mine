@@ -5,6 +5,8 @@ import fileDownload from "js-file-download";
 
 function Contact({ data, auth }) {
   const [edit, setEdit] = useState(data);
+  const [resume, setResume] = useState(null);
+  const [file, setFile] = useState("");
 
   function editChange(e) {
     setEdit({ ...edit, [e.target.name]: e.target.value });
@@ -47,6 +49,17 @@ function Contact({ data, auth }) {
 
   function del(id) {
     axios.get(`/api/user/socials/delete?id=${id}`);
+  }
+
+  function fileChange(e) {
+    setResume(e.target.files[0]);
+  }
+
+  function fileUpload(e) {
+    e.preventDefault();
+    const data = new FormData();
+    data.append("file", resume);
+    axios.post("/api/user/upload", data).then((res) => setFile(res.data.file));
   }
   return (
     <Container className="container">
@@ -146,6 +159,20 @@ function Contact({ data, auth }) {
               </Col>
             </Row>
           </form>
+          <Row>
+            <Col>
+              <input type="file" name="file" onChange={fileChange} />
+            </Col>
+            <Col>
+              {file !== "" ? (
+                file
+              ) : (
+                <Button onClick={fileUpload} outline color="primary">
+                  <i className="fa fa-upload"></i> Edit
+                </Button>
+              )}
+            </Col>
+          </Row>
           <Row>
             {data.social
               ? data.social.map((find, i) => (

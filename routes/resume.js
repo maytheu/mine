@@ -246,7 +246,7 @@ module.exports = (app) => {
 
   app.post("/api/contact", (req, res) => {
     const { name, subject, email } = req.body;
-    const message = `${req.body} - sent from ${email}`;
+    const message = `${req.body.message} - sent from ${email}`;
     if (
       check.verifyContent(name) ||
       check.verifyContent(subject) ||
@@ -261,12 +261,12 @@ module.exports = (app) => {
         from: email,
         to: process.env.RESUME_EMAIL,
         subject,
-        text: `${message} from ${email}`,
+        text: `${message}`// from ${email}`,
       },
       (err) => {
-        if (err) return res.json({success: false});
+        if (err) return res.json({ success: false });
+        res.status(200).json({ success: true });
         transporter.close();
-        return res.status(200).json({ success: true });
       }
     );
   });
