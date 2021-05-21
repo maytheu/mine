@@ -8,7 +8,7 @@ require('dotenv').config()
 
 const app = express()
 
-// app.use(helmet())
+app.use(helmet())
 
 require('./models/mainSchema.js')
 require('./models/userSchema.js')
