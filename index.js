@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
-const cors = require("cors");
+// const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 
@@ -23,23 +23,6 @@ app.use(
   })
 );
 
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: {
-//       directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: [
-//           "'self'",
-//           "'unsafe-inline'",
-//           "https://codersleague.herokuapp.com",
-//         ],
-//         styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
-//         imgSrc: ["'self'", "https://*.com"],
-//         fontSrc: ["'self'", "https://*.com", "data:"],
-//       },
-//     },
-//   })
-// );
 
 require("./models/mainSchema.js");
 require("./models/userSchema.js");
@@ -53,7 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(cors());
+// app.use(cors());
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
