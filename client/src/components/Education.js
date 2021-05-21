@@ -1,88 +1,88 @@
-import React from "react";
-import { Container, Row, Col, Button } from "reactstrap";
-import axios from "axios";
+import React from 'react'
+import { Container, Row, Col, Button } from 'reactstrap'
+import axios from 'axios'
 
-import useForm from "../form/useForm";
-import formValidate from "../form/formValidate";
+import useForm from '../form/useForm'
+import formValidate from '../form/formValidate'
 
-function Education({ data, auth }) {
+function Education ({ data, auth }) {
   const { values, handleChange, handleSubmit, errors } = useForm(
     add,
     formValidate
-  );
+  )
 
-  function add() {
+  function add () {
     try {
-      axios.post("/api/user/education", values).then((res) => {
-        if (res.data.success) return alert("Education added successfully");
-        alert("You're not allowed here");
-      });
+      axios.post('/api/user/education', values).then((res) => {
+        if (res.data.success) return alert('Education added successfully')
+        alert("You're not allowed here")
+      })
     } catch (e) {
-      alert(e);
+      alert(e)
     }
   }
 
-  function del(id) {
-    axios.get(`/api/user/education/delete?id=${id}`);
+  function del (id) {
+    axios.get(`/api/user/education/delete?id=${id}`)
   }
 
   return (
-    <Container className="container">
+    <Container className='container'>
       <Row>
         <Col>
-          <h2 className="title">Education</h2>
+          <h2 className='title'>Education</h2>
         </Col>
       </Row>
       {auth.isUser ? (
         <>
-          <form className="form" onSubmit={handleSubmit}>
+          <form className='form' onSubmit={handleSubmit}>
             <Row>
-              <Col className="input-text">Degree class</Col>
+              <Col className='input-text'>Degree class</Col>
               <Col>
                 <input
-                  type="text"
-                  name="degree"
+                  type='text'
+                  name='degree'
                   onChange={handleChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">School attended</Col>
+              <Col className='input-text'>School attended</Col>
               <Col>
                 <input
-                  type="text"
-                  name="school"
+                  type='text'
+                  name='school'
                   onChange={handleChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">Year of graduation</Col>
+              <Col className='input-text'>Year of graduation</Col>
               <Col>
                 <input
-                  type="number"
-                  name="graduated"
+                  type='number'
+                  name='graduated'
                   onChange={handleChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">Description</Col>
+              <Col className='input-text'>Description</Col>
               <Col>
                 <textarea
-                  name="description"
+                  name='description'
                   onChange={handleChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
               <Col>
-                <Button onSubmit={handleSubmit} outline color="primary">
-                  <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
+                <Button onSubmit={handleSubmit} outline color='primary'>
+                  <i className='fa fa-plus-circle' aria-hidden='true' /> Add
                 </Button>
               </Col>
             </Row>
@@ -90,11 +90,11 @@ function Education({ data, auth }) {
           <Row>
             {data.education
               ? data.education.map((find, i) => (
-                  <Col key={i}>
-                    <Button onClick={() => del(find.id)}>{find.school}</Button>
-                  </Col>
+                <Col key={i}>
+                  <Button onClick={() => del(find.id)}>{find.school}</Button>
+                </Col>
                 ))
-              : ""}
+              : ''}
           </Row>
         </>
       ) : data.education ? (
@@ -106,20 +106,20 @@ function Education({ data, auth }) {
               </Col>
             </Row>
             <Row>
-              <Col className="desc">
+              <Col className='desc'>
                 {school.degree} . {school.graduated}
               </Col>
             </Row>
             <Row>
-              <Col className="desc">{school.description}</Col>
+              <Col className='desc'>{school.description}</Col>
             </Row>
           </div>
         ))
       ) : (
-        ""
+        ''
       )}
     </Container>
-  );
+  )
 }
 
-export default Education;
+export default Education

@@ -7,7 +7,7 @@ import formValidate from "../form/formValidate";
 
 function Skills({ data, auth }) {
   function getRandomColor() {
-    var letters = [
+    const letters = [
       "success",
       "info",
       "warning",
@@ -16,8 +16,8 @@ function Skills({ data, auth }) {
       "secondary",
       "link",
     ];
-    var color = "";
-    for (var i = 0; i < letters.length; i++) {
+    let color = "";
+    for (let i = 0; i < letters.length; i++) {
       color = letters[Math.floor(Math.random() * 7)];
     }
     return color;
@@ -81,7 +81,7 @@ function Skills({ data, auth }) {
               <Col className="input-text">Level</Col>
               <Col>
                 <input
-                  type="number"
+                  type="text"
                   name="level"
                   onChange={handleChange}
                   className="input"
@@ -91,7 +91,7 @@ function Skills({ data, auth }) {
             <Row>
               <Col>
                 <Button onSubmit={handleSubmit} outline color="primary">
-                  <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
+                  <i className="fa fa-plus-circle" aria-hidden="true" /> Add
                   Skills
                 </Button>
               </Col>
@@ -134,7 +134,7 @@ function Skills({ data, auth }) {
             <Row>
               <Col>
                 <Button onSubmit={handleSubmit} outline color="primary">
-                  <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
+                  <i className="fa fa-plus-circle" aria-hidden="true" /> Add
                   socials
                 </Button>
               </Col>
@@ -153,9 +153,11 @@ function Skills({ data, auth }) {
       ) : data.skills ? (
         data.skills.map((skill, i) => (
           <Row key={i}>
-            <Col style={{paddingBottom: '10px'}}>
+            <Col style={{ paddingBottom: "10px" }}>
               <em>{skill.name}</em>
-              <Progress value={skill.level} color={getRandomColor()} />
+            </Col>
+            <Col style={{ paddingBottom: "10px" }}>
+              <em>{skill.level}</em>
             </Col>
           </Row>
         ))

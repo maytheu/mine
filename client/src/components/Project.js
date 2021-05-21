@@ -1,89 +1,89 @@
-import axios from "axios";
-import React from "react";
-import { Container, Row, Col, Button } from "reactstrap";
+import axios from 'axios'
+import React from 'react'
+import { Container, Row, Col, Button } from 'reactstrap'
 
-import formValidate from "../form/formValidate";
-import useForm from "../form/useForm";
+import formValidate from '../form/formValidate'
+import useForm from '../form/useForm'
 
-function Project({ data, auth }) {
+function Project ({ data, auth }) {
   const { values, handleChange, handleSubmit, errors } = useForm(
     add,
     formValidate
-  );
+  )
 
-  function add() {
+  function add () {
     try {
-      axios.post("/api/user/project", values).then((res) => {
-        if (res.data.success) return alert("Project added successfully");
-        alert("You're not allowed here");
-      });
+      axios.post('/api/user/project', values).then((res) => {
+        if (res.data.success) return alert('Project added successfully')
+        alert("You're not allowed here")
+      })
     } catch (e) {
-      alert(e);
+      alert(e)
     }
   }
 
-  function del(id) {
-    axios.get(`/api/user/project/delete?id=${id}`);
+  function del (id) {
+    axios.get(`/api/user/project/delete?id=${id}`)
   }
 
   return (
-    <Container className="container">
+    <Container className='container'>
       <Row>
         <Col>
-          <h2 className="title">Project</h2>
+          <h2 className='title'>Project</h2>
         </Col>
       </Row>
       <Row>
         {auth.isUser ? (
           <>
-            <form className="form" onSubmit={handleSubmit}>
+            <form className='form' onSubmit={handleSubmit}>
               <Row>
-                <Col className="input-text">Title</Col>
+                <Col className='input-text'>Title</Col>
                 <Col>
                   <input
-                    type="text"
-                    name="title"
+                    type='text'
+                    name='title'
                     onChange={handleChange}
-                    className="input"
+                    className='input'
                   />
                 </Col>
               </Row>
               <Row>
-                <Col className="input-text">Link</Col>
+                <Col className='input-text'>Link</Col>
                 <Col>
                   <input
-                    type="text"
-                    name="link"
+                    type='text'
+                    name='link'
                     onChange={handleChange}
-                    className="input"
+                    className='input'
                   />
                 </Col>
               </Row>
               <Row>
-                <Col className="input-text">Github link</Col>
+                <Col className='input-text'>Github link</Col>
                 <Col>
                   <input
-                    type="text"
-                    name="github"
+                    type='text'
+                    name='github'
                     onChange={handleChange}
-                    className="input"
+                    className='input'
                   />
                 </Col>
               </Row>
               <Row>
-                <Col className="input-text">Description</Col>
+                <Col className='input-text'>Description</Col>
                 <Col>
                   <textarea
-                    name="description"
+                    name='description'
                     onChange={handleChange}
-                    className="input"
+                    className='input'
                   />
                 </Col>
               </Row>
               <Row>
                 <Col>
-                  <Button onSubmit={handleSubmit} outline color="primary">
-                    <i className="fa fa-plus-circle" aria-hidden="true"></i> Add
+                  <Button onSubmit={handleSubmit} outline color='primary'>
+                    <i className='fa fa-plus-circle' aria-hidden='true' /> Add
                   </Button>
                 </Col>
               </Row>
@@ -91,33 +91,33 @@ function Project({ data, auth }) {
             <Row>
               {data.work
                 ? data.work.map((find, i) => (
-                    <Col key={i}>
-                      <Button onClick={() => del(find.id)}>{find.title}</Button>
-                    </Col>
+                  <Col key={i}>
+                    <Button onClick={() => del(find.id)}>{find.title}</Button>
+                  </Col>
                   ))
-                : ""}
+                : ''}
             </Row>
           </>
         ) : data.work ? (
           data.work.map((project, i) => (
-            <Col sm="4" key={i}>
+            <Col sm='4' key={i}>
               <Row>
                 <Col>
                   <h3>
-                    <a href={project.link} style={{ textDecoration: "none" }}>
+                    <a href={project.link} style={{ textDecoration: 'none' }}>
                       {project.title}
                     </a>
                   </h3>
                 </Col>
               </Row>
               <Row>
-                <Col className="desc">{project.description}</Col>
+                <Col className='desc'>{project.description}</Col>
               </Row>
               <Row>
                 <Col>
                   <a href={project.github}>
-                    <Button outline color="info">
-                      Find it on <i className="fa fa-github"></i>
+                    <Button outline color='info'>
+                      Find it on <i className='fa fa-github' />
                     </Button>
                   </a>
                 </Col>
@@ -125,11 +125,11 @@ function Project({ data, auth }) {
             </Col>
           ))
         ) : (
-          ""
+          ''
         )}
       </Row>
     </Container>
-  );
+  )
 }
 
-export default Project;
+export default Project

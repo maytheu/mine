@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Button } from "reactstrap";
-import axios from "axios";
-import fileDownload from "js-file-download";
+import React, { useState } from 'react'
+import { Container, Row, Col, Button } from 'reactstrap'
+import axios from 'axios'
+import fileDownload from 'js-file-download'
 
-function Contact({ data, auth }) {
-  const [edit, setEdit] = useState(data);
-  const [resume, setResume] = useState(null);
-  const [file, setFile] = useState("");
+function Contact ({ data, auth }) {
+  const [edit, setEdit] = useState(data)
+  const [resume, setResume] = useState(null)
+  const [file, setFile] = useState('')
 
-  function editChange(e) {
-    setEdit({ ...edit, [e.target.name]: e.target.value });
+  function editChange (e) {
+    setEdit({ ...edit, [e.target.name]: e.target.value })
   }
 
-  function editSubmit(e) {
-    e.preventDefault();
+  function editSubmit (e) {
+    e.preventDefault()
     const data = {
       resume: edit.resume,
       email: edit.email,
@@ -21,154 +21,154 @@ function Contact({ data, auth }) {
       street: edit.street,
       city: edit.city,
       state: edit.state,
-      bio: edit.bio,
-    };
+      bio: edit.bio
+    }
     try {
       axios
-        .post("/api/user/edit_about", data)
-        .then(() => alert("Updated succefully"));
+        .post('/api/user/edit_about', data)
+        .then(() => alert('Updated succefully'))
     } catch (err) {
-      alert(err);
+      alert(err)
     }
   }
 
-  function download(e) {
-    e.preventDefault();
+  function download (e) {
+    e.preventDefault()
     try {
       axios
         .get(`/api/download/${data.resume}`, {
-          responseType: "blob",
+          responseType: 'blob'
         })
         .then((res) => {
-          fileDownload(res.data, "MathewAdetunji.pdf");
-        });
+          fileDownload(res.data, 'MathewAdetunji.pdf')
+        })
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
-  function del(id) {
-    axios.get(`/api/user/socials/delete?id=${id}`);
+  function del (id) {
+    axios.get(`/api/user/socials/delete?id=${id}`)
   }
 
-  function fileChange(e) {
-    setResume(e.target.files[0]);
+  function fileChange (e) {
+    setResume(e.target.files[0])
   }
 
-  function fileUpload(e) {
-    e.preventDefault();
-    const data = new FormData();
-    data.append("file", resume);
-    axios.post("/api/user/upload", data).then((res) => setFile(res.data.file));
+  function fileUpload (e) {
+    e.preventDefault()
+    const data = new FormData()
+    data.append('file', resume)
+    axios.post('/api/user/upload', data).then((res) => setFile(res.data.file))
   }
   return (
-    <Container className="container">
+    <Container className='container'>
       {auth.isUser ? (
         <>
-          <form className="form" onSubmit={editSubmit}>
-            <h4 className="title">Update Contact info</h4>
+          <form className='form' onSubmit={editSubmit}>
+            <h4 className='title'>Update Contact info</h4>
             <Row>
-              <Col className="input-text">City</Col>
+              <Col className='input-text'>City</Col>
               <Col>
                 <input
-                  type="text"
-                  name="city"
+                  type='text'
+                  name='city'
                   value={edit.city}
                   onChange={editChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">state</Col>
+              <Col className='input-text'>state</Col>
               <Col>
                 <input
-                  type="text"
-                  name="state"
+                  type='text'
+                  name='state'
                   value={edit.state}
                   onChange={editChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">Phone</Col>
+              <Col className='input-text'>Phone</Col>
               <Col>
                 <input
-                  type="text"
-                  name="phone"
+                  type='text'
+                  name='phone'
                   value={edit.phone}
                   onChange={editChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">Email Address</Col>
+              <Col className='input-text'>Email Address</Col>
               <Col>
                 <input
-                  type="text"
-                  type="email"
-                  name="email"
+                  type='text'
+                  type='email'
+                  name='email'
                   onChange={editChange}
                   value={edit.email}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">Street</Col>
+              <Col className='input-text'>Street</Col>
               <Col>
                 <input
-                  type="text"
-                  name="street"
+                  type='text'
+                  name='street'
                   value={edit.street}
                   onChange={editChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">Resume</Col>
+              <Col className='input-text'>Resume</Col>
               <Col>
                 <input
-                  type="text"
-                  name="resume"
+                  type='text'
+                  name='resume'
                   value={edit.resume}
                   onChange={editChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="input-text">Bio</Col>
+              <Col className='input-text'>Bio</Col>
               <Col>
                 <textarea
-                  name="bio"
+                  name='bio'
                   value={edit.bio}
                   onChange={editChange}
-                  className="input"
+                  className='input'
                 />
               </Col>
             </Row>
             <Row>
               <Col>
-                <Button onSubmit={editSubmit} outline color="primary">
-                  <i className="fa fa-edit"></i> Edit
+                <Button onSubmit={editSubmit} outline color='primary'>
+                  <i className='fa fa-edit' /> Edit
                 </Button>
               </Col>
             </Row>
           </form>
           <Row>
             <Col>
-              <input type="file" name="file" onChange={fileChange} />
+              <input type='file' name='file' onChange={fileChange} />
             </Col>
             <Col>
-              {file !== "" ? (
+              {file !== '' ? (
                 file
               ) : (
-                <Button onClick={fileUpload} outline color="primary">
-                  <i className="fa fa-upload"></i> Edit
+                <Button onClick={fileUpload} outline color='primary'>
+                  <i className='fa fa-upload' /> Edit
                 </Button>
               )}
             </Col>
@@ -176,53 +176,53 @@ function Contact({ data, auth }) {
           <Row>
             {data.social
               ? data.social.map((find, i) => (
-                  <Col key={i}>
-                    <Button onClick={() => del(find.id)}>{find.name}</Button>
-                  </Col>
+                <Col key={i}>
+                  <Button onClick={() => del(find.id)}>{find.name}</Button>
+                </Col>
                 ))
-              : ""}
+              : ''}
           </Row>
         </>
       ) : (
         <>
-          <Row className="contact">
-            <Col xs="6" style={{ paddingBottom: "10px" }}>
+          <Row className='contact'>
+            <Col xs='6' style={{ paddingBottom: '10px' }}>
               Contact Information
             </Col>
-            <Col xs="6">Find me @</Col>
-            <Col xs="6">
-              <Row className="contact-info">
+            <Col xs='6'>Find me @</Col>
+            <Col xs='6'>
+              <Row className='contact-info'>
                 <Col>{data.street}</Col>
               </Row>
-              <Row className="contact-info">
+              <Row className='contact-info'>
                 <Col>
-                  {data.city} {data.state}, {data.country}{" "}
+                  {data.city} {data.state}, {data.country}{' '}
                 </Col>
               </Row>
-              <Row className="contact-info">
+              <Row className='contact-info'>
                 <Col>{data.phone}</Col>
               </Row>
-              <Row className="contact-info">
+              <Row className='contact-info'>
                 <Col>{data.email}</Col>
               </Row>
             </Col>
-            <Col xs="6">
-              <Row className="contact-info">
+            <Col xs='6'>
+              <Row className='contact-info'>
                 {data.social
                   ? data.social.map((find, i) => (
-                      <Col key={i}>
-                        <a href={find.url}>
-                          <i className={`socials ${find.className}`}></i>
-                        </a>
-                      </Col>
+                    <Col key={i}>
+                      <a href={find.url}>
+                        <i className={`socials ${find.className}`} />
+                      </a>
+                    </Col>
                     ))
-                  : ""}
+                  : ''}
               </Row>
               <Row>
                 <Col>
-                  <p style={{ marginTop: "2rem" }}>
-                    <Button outline color="info" onClick={download}>
-                      <i className="fa fa-download"></i> Download Resume
+                  <p style={{ marginTop: '2rem' }}>
+                    <Button outline color='info' onClick={download}>
+                      <i className='fa fa-download' /> Download Resume
                     </Button>
                   </p>
                 </Col>
@@ -232,7 +232,7 @@ function Contact({ data, auth }) {
         </>
       )}
     </Container>
-  );
+  )
 }
 
-export default Contact;
+export default Contact

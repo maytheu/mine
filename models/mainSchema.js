@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const mainSchema = mongoose.Schema({
   city: String,
@@ -17,7 +17,7 @@ const mainSchema = mongoose.Schema({
   education: [],
   skillMessage: String,
   skills: [],
-  work: [],
-});
+  work: []
+})
 
-mongoose.model("mains", mainSchema);
+mongoose.model('mains', mainSchema)

@@ -1,19 +1,19 @@
-const mongoose = require("mongoose");
-const User = mongoose.model("users");
+const mongoose = require('mongoose')
+const User = mongoose.model('users')
 
 module.exports = (req, res, next) => {
-  let token = req.cookies.resume;
+  const token = req.cookies.resume
   User.findToken(token, (err, user) => {
-    if (err) throw err;
+    if (err) throw err
     if (!user) {
       return res.json({
         isAuth: false,
-        error: true,
-      });
+        error: true
+      })
     }
-    req.token = token;
-    req.user = user;
+    req.token = token
+    req.user = user
 
-    next();
-  });
-};
+    next()
+  })
+}
