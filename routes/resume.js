@@ -3,11 +3,8 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const mailer = require("nodemailer");
-const csrf = require("csurf");
 
 const Main = mongoose.model("mains");
-
-const csrfProtection = csrf({ cookie: true });
 
 const check = require("../utils/check");
 const userAuth = require("../utils/userAuth");
@@ -39,7 +36,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }).single("file");
 
 module.exports = (app) => {
-  app.post("/api/user/about", userAuth, csrfProtection, (req, res) => {
+  app.post("/api/user/about", userAuth, (req, res) => {
     const { street, city, state } = req.body;
     const { email } = req.user;
     if (
@@ -58,7 +55,7 @@ module.exports = (app) => {
     });
   });
 
-  app.post("/api/user/socials", userAuth, csrfProtection, (req, res) => {
+  app.post("/api/user/socials", userAuth, (req, res) => {
     const { className, name, url } = req.body;
     const d = new Date();
     if (
@@ -84,7 +81,7 @@ module.exports = (app) => {
     );
   });
 
-  app.get("/api/user/socials/delete", userAuth, csrfProtection, (req, res) => {
+  app.get("/api/user/socials/delete", userAuth, (req, res) => {
     const id = req.query.id;
     Main.update({}, { $pull: { social: { id } } }, { multi: true }).exec(
       (err, doc) => {
@@ -94,7 +91,7 @@ module.exports = (app) => {
     );
   });
 
-  app.post("/api/user/education", userAuth, csrfProtection, (req, res) => {
+  app.post("/api/user/education", userAuth, (req, res) => {
     const { degree, description, graduated, school } = req.body;
     const d = new Date();
     if (
@@ -121,22 +118,17 @@ module.exports = (app) => {
     );
   });
 
-  app.get(
-    "/api/user/education/delete",
-    userAuth,
-    csrfProtection,
-    (req, res) => {
-      const id = req.query.id;
-      Main.update({}, { $pull: { education: { id } } }, { multi: true }).exec(
-        (err, doc) => {
-          if (err) return res.status(403).send({ success: false, err });
-          res.status(200).json({ success: true });
-        }
-      );
-    }
-  );
+  app.get("/api/user/education/delete", userAuth, (req, res) => {
+    const id = req.query.id;
+    Main.update({}, { $pull: { education: { id } } }, { multi: true }).exec(
+      (err, doc) => {
+        if (err) return res.status(403).send({ success: false, err });
+        res.status(200).json({ success: true });
+      }
+    );
+  });
 
-  app.post("/api/user/skills", userAuth, csrfProtection, (req, res) => {
+  app.post("/api/user/skills", userAuth, (req, res) => {
     const { name, level } = req.body;
     if (check.verifyContent(name) || check.verifyContent(level)) {
       return res
@@ -158,7 +150,7 @@ module.exports = (app) => {
     );
   });
 
-  app.get("/api/user/skills/delete", userAuth, csrfProtection, (req, res) => {
+  app.get("/api/user/skills/delete", userAuth, (req, res) => {
     const id = req.query.id;
     Main.update({}, { $pull: { skills: { id } } }, { multi: true }).exec(
       (err, doc) => {
@@ -168,7 +160,7 @@ module.exports = (app) => {
     );
   });
 
-  app.post("/api/user/project", userAuth, csrfProtection, (req, res) => {
+  app.post("/api/user/project", userAuth, (req, res) => {
     const { link, description, title, github } = req.body;
     const d = new Date();
     if (
@@ -195,7 +187,7 @@ module.exports = (app) => {
     );
   });
 
-  app.get("/api/user/project/delete", userAuth, csrfProtection, (req, res) => {
+  app.get("/api/user/project/delete", userAuth, (req, res) => {
     const id = req.query.id;
     Main.update({}, { $pull: { work: { id } } }, { multi: true }).exec(
       (err, doc) => {
@@ -205,7 +197,7 @@ module.exports = (app) => {
     );
   });
 
-  app.post("/api/user/edit_about", userAuth, csrfProtection, (req, res) => {
+  app.post("/api/user/edit_about", userAuth, (req, res) => {
     Main.findOneAndUpdate(
       { email: req.user.email },
       { $set: req.body },
@@ -216,14 +208,14 @@ module.exports = (app) => {
     );
   });
 
-  app.post("/api/user/upload", userAuth, csrfProtection, (req, res) => {
+  app.post("/api/user/upload", userAuth, (req, res) => {
     upload(req, res, (err) => {
       if (err) return res.status(500).send("Please upload a file");
       return res.status(200).json({ success: true, file: req.file.filename });
     });
   });
 
-  app.post("/api/user/upload/del", userAuth, csrfProtection, (req, res) => {
+  app.post("/api/user/upload/del", userAuth, (req, res) => {
     const { del } = req.body;
     fs.unlink(path.join(__dirname, `../uploads/${del}`), (err) => {
       if (err) return res.status(500).send("Cant delete file");
