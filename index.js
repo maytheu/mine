@@ -3,10 +3,12 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const path = require("path");
+const cors = require('cors')
 require("dotenv").config();
 
 const app = express();
 
+app.use(cors())
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -48,5 +50,5 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3005;
 app.listen(PORT, () => console.log(`Server running at port: ${PORT}`));
