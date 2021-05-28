@@ -1,27 +1,27 @@
 import React from "react";
-import { Container, Row, Col, Progress, Button } from "reactstrap";
+import { Container, Row, Col, Button } from "reactstrap";
 import axios from "axios";
 
 import useForm from "../form/useForm";
 import formValidate from "../form/formValidate";
 
 function Skills({ data, auth }) {
-  function getRandomColor() {
-    const letters = [
-      "success",
-      "info",
-      "warning",
-      "danger",
-      "primary",
-      "secondary",
-      "link",
-    ];
-    let color = "";
-    for (let i = 0; i < letters.length; i++) {
-      color = letters[Math.floor(Math.random() * 7)];
-    }
-    return color;
-  }
+  // function getRandomColor() {
+  //   const letters = [
+  //     "success",
+  //     "info",
+  //     "warning",
+  //     "danger",
+  //     "primary",
+  //     "secondary",
+  //     "link",
+  //   ];
+  //   let color = "";
+  //   for (let i = 0; i < letters.length; i++) {
+  //     color = letters[Math.floor(Math.random() * 7)];
+  //   }
+  //   return color;
+  // }
   const { values, handleChange, handleSubmit, errors } = useForm(
     add,
     formValidate

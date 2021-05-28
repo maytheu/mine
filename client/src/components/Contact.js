@@ -107,7 +107,6 @@ function Contact ({ data, auth }) {
               <Col className='input-text'>Email Address</Col>
               <Col>
                 <input
-                  type='text'
                   type='email'
                   name='email'
                   onChange={editChange}

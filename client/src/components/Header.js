@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 import { Container, Row, Col, Button } from 'reactstrap'
 import { withRouter } from 'react-router-dom'
 
-import formValidate from '../form/formValidate'
-
 function Header ({ data, auth, ...props }) {
   const [edit, setEdit] = useState(data)
 
