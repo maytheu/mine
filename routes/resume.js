@@ -3,11 +3,23 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const mailer = require("nodemailer");
+const multerS3 = require("multer-s3");
+const aws = require("aws-sdk");
 
 const Main = mongoose.model("mains");
 
 const check = require("../utils/check");
 const userAuth = require("../utils/userAuth");
+
+const s3 = new aws.S3();
+
+aws.config.update({
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  region: "us-east-1",
+});
+
+const S3_BUCKET = process.env.S3_BUCKET;
 
 const transport = {
   host: "smtp.gmail.com",
@@ -24,16 +36,29 @@ const transport = {
 };
 const transporter = mailer.createTransport(transport);
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../uploads/"));
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`);
-  },
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, path.join(__dirname, "../uploads/"));
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, `${Date.now()}_${file.originalname}`);
+//   },
+// });
+
+
+const upload = multer({
+  storage: multerS3({
+    acl: "public-read",
+    s3,
+    bucket: S3_BUCKET,
+    key: function (req, file, cb) {
+      cb(null, file.originalname.split(".")[0] + "-" + Date.now().toString());
+    },
+  }),
 });
 
-const upload = multer({ storage }).single("file");
+const singleUpload = upload.single("file");
+
 
 module.exports = (app) => {
   app.post("/api/user/about", userAuth, (req, res) => {
@@ -209,9 +234,20 @@ module.exports = (app) => {
   });
 
   app.post("/api/user/upload", userAuth, (req, res) => {
-    upload(req, res, (err) => {
-      if (err) return res.status(500).send("Please upload a file");
-      return res.status(200).json({ success: true, file: req.file.filename });
+    singleUpload(req, res, (err) => {
+      if (err)
+        return res.json({
+          success: false,
+          errors: {
+            title: "Image Upload Error",
+            detail: err.message,
+            error: err,
+          },
+        });
+      return res.status(200).json({ success: true, file: req.file.location });
+
+      //   if (err) return res.status(500).send("Please upload a file");
+      //   return res.status(200).json({ success: true, file: req.file.filename });
     });
   });
 
