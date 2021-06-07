@@ -45,7 +45,6 @@ const transporter = mailer.createTransport(transport);
 //   },
 // });
 
-
 const upload = multer({
   storage: multerS3({
     acl: "public-read",
@@ -58,7 +57,6 @@ const upload = multer({
 });
 
 const singleUpload = upload.single("file");
-
 
 module.exports = (app) => {
   app.post("/api/user/about", userAuth, (req, res) => {
