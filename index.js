@@ -3,24 +3,39 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const path = require("path");
-const cors = require('cors')
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
+
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         ...helmet.contentSecurityPolicy.getDefaultDirectives(),defaultSrc: null,
+//         "script-src": [
+//           "'self'",
+//           "'unsafe-inline'",
+//           "https://adetunjimathew.herokuapp.com/",
+//         ],
+//       },
+//     },
+//   })
+// );
 
 app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        "script-src": [
-          "'self'",
-          "'unsafe-inline'",
-          "https://adetunjimathew.herokuapp.com/",
-        ],
-      },
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "unsafe-inline",
+        "https://adetunjimathew.herokuapp.com/",
+      ],
+      // styleSrc: ["'self'", "maxcdn.bootstrapcdn.com"],
+      // fontSrc: ["'self'", "maxcdn.bootstrapcdn.com"],
     },
   })
 );
@@ -33,11 +48,9 @@ mongoose.connect(process.env.DATABASE_URL, {
   useUnifiedTopology: true,
 });
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
