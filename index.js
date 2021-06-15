@@ -25,20 +25,6 @@ app.use(cors());
 //   })
 // );
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'",
-        "unsafe-inline",
-        "https://adetunjimathew.herokuapp.com/",
-      ],
-      // styleSrc: ["'self'", "maxcdn.bootstrapcdn.com"],
-      // fontSrc: ["'self'", "maxcdn.bootstrapcdn.com"],
-    },
-  })
-);
 
 require("./models/mainSchema.js");
 require("./models/userSchema.js");
