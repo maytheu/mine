@@ -14,6 +14,7 @@ function Form () {
 
   function sendMail () {
     axios.post('/api/contact', values).then((res) => {
+      console.log(res.data.success)
       if (res.data.success) {
         return alert(
           'Thanks for contacting me, will get back to you in less than 48 hours'

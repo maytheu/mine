@@ -2,9 +2,13 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const mailer = require("nodemailer");
+require("dotenv").config();
 const multerS3 = require("multer-s3");
 const aws = require("aws-sdk");
+const formData = require("form-data");
+const Mailgun = require("mailgun.js");
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({ username: "api", key: process.env.MAILGUN });
 
 const Main = mongoose.model("mains");
 
@@ -20,30 +24,6 @@ aws.config.update({
 });
 
 const S3_BUCKET = process.env.S3_BUCKET;
-
-const transport = {
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    type: "OAuth2",
-    user: process.env.EMAIL,
-    clientId: process.env.GOOGLE_CLIENT,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    refreshToken: process.env.GOOGLE_REFRESH,
-    accessToken: process.env.GOOGLE_ACCESS,
-  },
-};
-const transporter = mailer.createTransport(transport);
-
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, path.join(__dirname, "../uploads/"));
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, `${Date.now()}_${file.originalname}`);
-//   },
-// });
 
 const upload = multer({
   storage: multerS3({
@@ -243,9 +223,6 @@ module.exports = (app) => {
           },
         });
       return res.status(200).json({ success: true, file: req.file.location });
-
-      //   if (err) return res.status(500).send("Please upload a file");
-      //   return res.status(200).json({ success: true, file: req.file.filename });
     });
   });
 
@@ -296,18 +273,14 @@ module.exports = (app) => {
         .status(500)
         .send({ success: false, err: "Invalid Parameter parsing" });
     }
-    transporter.sendMail(
-      {
-        from: email,
+    mg.messages
+      .create(process.env.MAILGUN_URL, {
+        from: `Contact <${email}>`,
         to: process.env.RESUME_EMAIL,
         subject,
         text: `${message}`, // from ${email}`,
-      },
-      (err) => {
-        if (err) return res.json({ success: false });
-        res.status(200).json({ success: true });
-        transporter.close();
-      }
-    );
+      })
+      .then(() => res.status(200).json({ success: true }))
+      .catch(() => res.json({ success: false }));
   });
 };
